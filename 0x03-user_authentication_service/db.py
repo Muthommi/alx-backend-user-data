@@ -11,6 +11,7 @@ from sqlalchemy.orm.session import Session
 from user import Base, User
 from sqlalchemy.exc import InvalidRequestError
 from sqlalchemy.orm.exc import NoResultFound
+from typing import Any
 
 
 class DB:
@@ -60,3 +61,21 @@ class DB:
             raise InvalidRequestError("Invalid query arguments")
 
         return user
+
+    def update_user(self, user_id: int, **kwargs: Any) -> None:
+        """
+        Function to update a user in the database.
+        Raises: ValueError if invalid attribute is passed.
+        """
+        try:
+            user = self.find_user_by(id=user_id)
+
+            for key, value in kwargs.items():
+                if not hasattr(user, key):
+                    raise ValueError(f"Invalid attribute: {key}")
+                setattr(user, key, value)
+
+            self._session.commit()
+
+        except NoResultFound:
+            raise ValueError(f"User with id {user_id} not found")
