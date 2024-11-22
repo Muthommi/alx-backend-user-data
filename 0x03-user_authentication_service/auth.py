@@ -3,11 +3,19 @@
 Module that defines a _hash_password method that takes in
 password string arguments.
 """
+import uuid
 import bcrypt
 from db import DB
 from user import User
 from sqlalchemy.orm.exc import NoResultFound
 from bcrypt import hashpw, gensalt
+
+
+def _generate_uuid() -> str:
+    """
+    Generates new UUID.
+    Returns: str.
+    """
 
 
 def _hash_password(password: str) -> bytes:
